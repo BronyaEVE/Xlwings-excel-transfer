@@ -93,21 +93,19 @@ class Excel_trans:
         self.new.data = self.old.data
         
         # set the bolder
-        # self.new.sheet.range((1, 1), (self.old.data.shape[0], self.old.data.shape[1])).api.Borders.LineStyle = 1
+        self.new.sheet.range((1, 1), (len(self.old.data), len(self.old.data[0]))).api.Borders.LineStyle = 1
         
         # set the color, merge and font
-        '''
+
         color_str = 'A1:Z1, A2'
-        merge_str = ''
-        font_str = ''
+        merge_str = 'A1:Z1, A2'
+        font_str = 'A1:Z1, A2'
         self.new.sheet.api.Range(color_str).Interior.ColorIndex  = 3
         self.new.sheet.api.Range(merge_str).Merge()
         self.new.sheet.api.Range(font_str).Font.Bold = True
         self.new.sheet.api.Range(font_str).Font.Size = 14
-        self.new.sheet.api.Range(font_str).Font.Name = 'Times New Roman'
-        self.new.sheet.api.Range(font_str).HorizontallyAligned = -4108
-        '''
-        
+        self.new.sheet.api.Range(font_str).Font.Name = 'Times New Roman'                       
+        self.new.sheet.api.Range('A3:Z3').HorizontalAlignment = -4108
         
         # set the column width and row length
         self.new.sheet.autofit()
@@ -157,10 +155,10 @@ if __name__ == '__main__':
            p = Pool(4)
            start_time = time.time()
            file_names = os.listdir(Root_input_path)
-           print(file_names)
            for i in range(4):
                transfer = Excel_trans()
-               p.apply_async(func=worker, args=(transfer, f'{Root_input_path}\\{file_names[i]}', f'{Root_output_path}\\{file_names[i]}'))
+               print(f'{Root_input_path}\\{file_names[i]}', f'{Root_output_path}\\{file_names[i]}')
+               p.apply_async(func=worker(transfer, f'{Root_input_path}\\{file_names[i]}', f'{Root_output_path}\\{file_names[i]}'))
            p.close()
            p.join()
            end_time = time.time()
