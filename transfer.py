@@ -1,14 +1,13 @@
 import os
 import time
-import numpy as np
 import xlwings as xw
 from multiprocessing import Pool
 
 def worker(transfer, input_path, output_path):
-   try:
-       transfer.trans(input_path, output_path)
-   except Exception as e:
-       print(f'Error in worker: {e}')
+    try:
+        transfer.trans(input_path, output_path)
+    except Exception as e:
+        print(f'Error in worker: {e}')
 
 class Excel:
     
@@ -53,8 +52,7 @@ class Excel:
         self.select_sheet(index)
         if self.sheet:
             self.data = self.sheet.used_range.value
-            self.shape = self.sheet.api.Shapes
-
+            self.shape = [len(self.data), len(self.data[0])]
             del self.sheet
     
     def clear_cache(self):
@@ -90,9 +88,9 @@ class Excel_trans:
         self.old.cache_data(0)
         self.new.add_sheet('new')
         self.new.data = self.old.data
-        
+        self.new.shape = [len(self.new.data), len(self.new.data[0])]
         # set the bolder
-        self.new.sheet.range((1, 1), (len(self.old.data), len(self.old.data[0]))).api.Borders.LineStyle = 1
+        self.new.sheet.range((1, 1), (self.old.shape[0], self.old.shape[1])).api.Borders.LineStyle = 1
         
         # set the color, merge and font
         color_str = 'A1:Z1, A2'
@@ -107,10 +105,10 @@ class Excel_trans:
         
         # set the column width and row length
         self.new.sheet.autofit()
-        for i in range(1, len(self.old.data[0]) + 1):
+        for i in range(1, self.new.shape[1] + 1):
             if self.new.sheet.range(1, i).column_width > 15:
                 self.new.sheet.range(1, i).column_width = 15
-        for i in range(1, len(self.old.data[0]) + 1):
+        for i in range(1, self.new.shape[1] + 1):
             if self.new.sheet.range(i, 1).row_height > 15:
                 self.new.sheet.range(i, 1).row_height = 15
         
