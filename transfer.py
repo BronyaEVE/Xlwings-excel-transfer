@@ -88,7 +88,6 @@ class Excel_trans:
     def trans(self, old_path, new_path):
         self.old.open(old_path)
         self.old.cache_data(0)
-        # print('self.old.data', type(self.old.data), self.old.data)
         self.new.add_sheet('new')
         self.new.data = self.old.data
         
@@ -96,7 +95,6 @@ class Excel_trans:
         self.new.sheet.range((1, 1), (len(self.old.data), len(self.old.data[0]))).api.Borders.LineStyle = 1
         
         # set the color, merge and font
-
         color_str = 'A1:Z1, A2'
         merge_str = 'A1:Z1, A2'
         font_str = 'A1:Z1, A2'
