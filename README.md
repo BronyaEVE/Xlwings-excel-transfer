@@ -63,3 +63,19 @@ def trans(self, old_path, new_path):
         if self.new:
             self.new.close()
 ```
+
+## How to improve performance
+
+1. one read one write.  
+2. set color like this.
+
+```python
+color_str = 'A1:Z1, A2'
+self.new.sheet.api.Range(color_str).Interior.ColorIndex  = 3
+```
+
+3. not like this.  
+
+```python
+
+```
